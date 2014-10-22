@@ -3,7 +3,7 @@ describe Plaid, 'Call' do
   before(:all) do |_|
     keys = YAML::load(IO.read('./keys.yml'))
     Plaid.config do |p|
-      p.customer_id = keys['CUSTOMER_ID']
+      p.client_id = keys['client_id']
       p.secret = keys['SECRET']
     end
   end
@@ -28,7 +28,7 @@ describe Plaid, 'Customer' do
   before :all do |_|
     keys = YAML::load(IO.read('./keys.yml'))
     Plaid.config do |p|
-      p.customer_id = keys['CUSTOMER_ID']
+      p.client_id = keys['client_id']
       p.secret = keys['SECRET']
     end
   end

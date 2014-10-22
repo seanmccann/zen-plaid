@@ -52,17 +52,17 @@ module Plaid
 
     def get(path,access_token)
       url = BASE_URL + path
-      RestClient.get(url, params: {client_id: self.instance_variable_get(:'@customer_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token})
+      RestClient.get(url, params: {client_id: self.instance_variable_get(:'@client_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token})
     end
 
     def post(path,access_token,options={})
       url = BASE_URL + path
-      RestClient.post url, client_id: self.instance_variable_get(:'@customer_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token, mfa: options[:mfa], type: options[:type]
+      RestClient.post url, client_id: self.instance_variable_get(:'@client_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token, mfa: options[:mfa], type: options[:type]
     end
 
     def delete(path,access_token)
       url = BASE_URL + path
-      RestClient.delete(url, params: {client_id: self.instance_variable_get(:'@customer_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token})
+      RestClient.delete(url, params: {client_id: self.instance_variable_get(:'@client_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token})
     end
   end
 end

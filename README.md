@@ -25,14 +25,14 @@ require 'plaid'
 Pop this into your environment file.
 ```
 Plaid.config do |config|
-  config.customer_id = keys[CUSTOMER_ID]
+  config.client_id = keys[client_id]
   config.secret = keys[SECRET]
 end
 ```
 
-Now create a YML file that has your CUSTOMER_ID and your SECRET provided by Plaid.
+Now create a YML file that has your client_id and your SECRET provided by Plaid.
 
-There are two different requests one can make using the gem: Call and Customer. 
+There are two different requests one can make using the gem: Call and Customer.
 
 ## Call Methods
 
@@ -52,37 +52,37 @@ Call is anything that does not require an access_token.
     The account information returned doesn't contain full account and routing numbers
 ```ruby
 # if(code == 200) {returns {[:code => 'x'],[:access_token => 'y'],[:accounts => 'z'],[:transactions => 'a']}
-# Note: 'x','y','z','a' are all formatted as json. 
+# Note: 'x','y','z','a' are all formatted as json.
 
 Ex)
-  new_account = Plaid.call.add_account_connect("amex","plaid_test","plaid_good","test@gmail.com") 
+  new_account = Plaid.call.add_account_connect("amex","plaid_test","plaid_good","test@gmail.com")
   puts new_account[:code]
   "200"
 ```
 3) get_place( id ) <br>
-     Returns a hash with keys: entity and location all with embedded json from Plaid. 
+     Returns a hash with keys: entity and location all with embedded json from Plaid.
 ```ruby
 # if(code == 200) {returns {[:entity => 'x'],[:location => 'y']}
-# Note: 'x','y' are formatted as json. 
+# Note: 'x','y' are formatted as json.
 
 Ex)
-  location_deets = Plaid.call.get_place("52a77fea4a2eab775f004109") 
+  location_deets = Plaid.call.get_place("52a77fea4a2eab775f004109")
   puts new_account[:location]["address"]
   "125 Main St"
 ```
 
 ## Customer Methods
 
-Customer defines anything that requires an access_token.  
+Customer defines anything that requires an access_token.
 
 1) mfa_auth_step( access_token , code ) <br>
     Returns a hash with keys: code, access_token, accounts, transactions all with embedded json from Plaid.
 ```ruby
 # if(code == 200) {returns {[:code => 'x'],[:access_token => 'y'],[:accounts => 'z'],[:transactions => 'a']}
-# Note: 'x','y','z','a' are all formatted as json. 
+# Note: 'x','y','z','a' are all formatted as json.
 
 Ex)
-  new_account = Plaid.customer.mfa_step("test","tomato") 
+  new_account = Plaid.customer.mfa_step("test","tomato")
   puts new_account[:code]
   "200"
 ```
@@ -91,10 +91,10 @@ Ex)
     Returns a hash with keys: code, access_token, accounts, transactions all with embedded json from Plaid.
 ```ruby
 # if(code == 200) {returns {[:code => 'x'],[:access_token => 'y'],[:accounts => 'z'],[:transactions => 'a']}
-# Note: 'x','y','z','a' are all formatted as json. 
+# Note: 'x','y','z','a' are all formatted as json.
 
 Ex)
-  new_account = Plaid.customer.mfa_auth_step("test","tomato") 
+  new_account = Plaid.customer.mfa_auth_step("test","tomato")
   puts new_account[:code]
   "200"
 ```
@@ -104,10 +104,10 @@ To attain transactions you have to use mfa_connect, and mfa_connect_step
     Returns a hash with key transaction
 ```ruby
 # if(code == 200) {returns {[:transaction => 'x']}
-# Note: 'x' is formatted as json. 
+# Note: 'x' is formatted as json.
 
 Ex)
-  transactions = Plaid.customer.get_transactions("test") 
+  transactions = Plaid.customer.get_transactions("test")
   puts transactions[:transactions][1]["amount"]
   1334.99
 ```
@@ -117,7 +117,7 @@ Ex)
 ```ruby
 
 Ex)
-  message = Plaid.customer.delete_account("test") 
+  message = Plaid.customer.delete_account("test")
   puts message[:code]
   "200"
 ```

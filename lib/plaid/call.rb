@@ -9,13 +9,13 @@ module Plaid
         instance_variable_set(:"@#{key}", Plaid.instance_variable_get(:"@#{key}"))
       end
     end
-   
+
     # This is a specific route for auth,
     # it returns specific acct info
     def add_account_auth(type, username, password, email)
       parse_auth_response(post('/auth', type, username, password, email))
     end
-   
+
     # This is a specific route for connect,
     # it returns transaction information
     def add_account_connect(type,username,password,email)
@@ -46,7 +46,7 @@ module Plaid
       case response.code
       when 200
         {code: response.code, access_token: parsed['access_token'], accounts: parsed['accounts'], transactions: parsed['transactions']}
-      when 201  
+      when 201
         {code: response.code, type: parsed['type'], access_token: parsed['access_token'], mfa_info: parsed['mfa_info']}
       else
         {code: response.code, message: parsed}
@@ -62,7 +62,7 @@ module Plaid
 
     def post(path,type,username,password,email)
       url = BASE_URL + path
-      RestClient.post url, client_id: self.instance_variable_get(:'@customer_id') ,secret: self.instance_variable_get(:'@secret'), type: type ,credentials: {username: username, password: password} ,email: email
+      RestClient.post url, client_id: self.instance_variable_get(:'@client_id') ,secret: self.instance_variable_get(:'@secret'), type: type ,credentials: {username: username, password: password} ,email: email
     end
 
     def get(path,id)
