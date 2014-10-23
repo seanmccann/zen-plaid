@@ -26,6 +26,14 @@ module Plaid
       parse_place(get('entities/',id))
     end
 
+    def get_institutions
+      parse_generic_response(get('institutions/'))
+    end
+
+    def get_institution(id)
+      parse_generic_response(get('institutions/', id))
+    end
+
     protected
 
     # Specific parser for auth response
@@ -53,6 +61,11 @@ module Plaid
       end
     end
 
+    def parse_generic_response(response)
+      parsed = JSON.parse(response)
+      {code: response.code, message: parsed}
+    end
+
     def parse_place(response)
       parsed = JSON.parse(response)
       {code: response.code, category: parsed['category'], name: parsed['name'], id: parsed['_id'], phone: parsed['meta']['contact']['telephone'], location: parsed['meta']['location']}
@@ -65,7 +78,7 @@ module Plaid
       RestClient.post url, client_id: self.instance_variable_get(:'@client_id') ,secret: self.instance_variable_get(:'@secret'), type: type ,credentials: {username: username, password: password} ,email: email
     end
 
-    def get(path,id)
+    def get(path,id="")
       url = BASE_URL + path + id
       RestClient.get(url)
     end
