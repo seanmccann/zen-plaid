@@ -46,7 +46,7 @@ module Plaid
 
     def post(path, options={})
       url = BASE_URL + path
-      RestClient.post url, options.merge!(auth)
+      RestClient.post url, options.merge!(auth).delete_if { |k, v| v.nil? }
     end
 
     def delete(path,access_token)

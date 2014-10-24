@@ -11,14 +11,21 @@ describe Plaid, 'Call' do
   describe "Auth" do
     context 'no mfa' do
       it 'returns a response code of 200' do
-        response = Plaid.call.add_account_auth('wells','plaid_test','plaid_good','test@plaid.com')
+        response = Plaid.call.add_account_auth('wells','plaid_test','plaid_good')
+        expect(response[:code]).to eq(200)
+      end
+    end
+
+    context 'pin and no mfa' do
+      it 'returns a response code of 200' do
+        response = Plaid.call.add_account_auth('usaa', 'plaid_test', 'plaid_good', '1234')
         expect(response[:code]).to eq(200)
       end
     end
 
     context 'mfa required' do
       it 'returns a response code of 201' do
-        response = Plaid.call.add_account_auth('chase','plaid_test','plaid_good','test@plaid.com')
+        response = Plaid.call.add_account_auth('chase','plaid_test','plaid_good')
         expect(response[:code]).to eq(201)
       end
     end
@@ -26,7 +33,7 @@ describe Plaid, 'Call' do
     context 'wrong credentials' do
       it 'returns a response code of 402' do
         expect {
-          Plaid.call.add_account_auth('wells','plaid_test','plaid_bad','test@plaid.com')
+          Plaid.call.add_account_auth('wells','plaid_test','plaid_bad')
         }.to raise_error('402 Payment Required')
       end
     end
@@ -34,7 +41,7 @@ describe Plaid, 'Call' do
 
   describe "Connect" do
     it 'returns a response code of 200' do
-      response = Plaid.call.add_account_connect('amex','plaid_test','plaid_good','test@plaid.com')
+      response = Plaid.call.add_account_connect('amex','plaid_test','plaid_good')
       expect(response[:code]).to eq(200)
     end
   end
