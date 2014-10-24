@@ -1,3 +1,4 @@
+require 'plaid/version'
 require 'plaid/config'
 require 'plaid/call'
 require 'plaid/customer'
