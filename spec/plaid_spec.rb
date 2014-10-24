@@ -41,7 +41,6 @@ describe Plaid, 'Call' do
 
     it 'gets amex institution information' do
       institution = Plaid.call.get_institution('5301a9d704977c52b60000db')
-      puts institution[:institution].inspect
       expect(institution[:message]['name']).to eq("American Express")
       expect(institution[:message]['mfa']).to be_empty
       expect(institution[:code]).to eq(200)
@@ -63,8 +62,13 @@ describe Plaid, 'Customer' do
     expect(transactions[:code]).to eq(200)
   end
 
-  it 'calls mfa_step and returns a response code of 200' do
-    new_account = Plaid.customer.mfa_auth_step('test','again','chase')
+  it 'calls mfa_auth_step and returns a response code of 200' do
+    new_account = Plaid.customer.mfa_auth_step('test','1234','chase', send_method: {type: :phone})
+    expect(new_account[:code]).to eq(200)
+  end
+
+  it 'calls mfa_connect_step and returns a response code of 200' do
+    new_account = Plaid.customer.mfa_connect_step('test', '1234', 'chase', send_method: {type: :phone})
     expect(new_account[:code]).to eq(200)
   end
 

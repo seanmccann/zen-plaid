@@ -12,12 +12,14 @@ module Plaid
       end
     end
 
-    def mfa_auth_step(access_token, code, type)
-      parse_response(post('/auth/step', access_token, mfa: code, type: type), 0)
+    def mfa_auth_step(access_token, mfa, type, options={})
+      options_string = options.to_json
+      parse_response post('/auth/step', access_token: access_token, mfa: mfa, type: type, options: options_string)
     end
 
-    def mfa_connect_step(access_token,code)
-      parse_response(post('/connect/step', access_token, mfa: code),1)
+    def mfa_connect_step(access_token, mfa, type, options={})
+      options_string = options.to_json
+      parse_response post('/connect/step', access_token: access_token, mfa: mfa, type: type, options: options_string)
     end
 
     def get_transactions(access_token)
@@ -30,22 +32,9 @@ module Plaid
 
     protected
 
-    def parse_response(response,method)
+    def parse_response(response,method=nil)
       parsed = JSON.parse(response)
-      if response.code == '200'
-        case method
-        when 0
-          {code: response.code, access_token: parsed['access_token'], accounts: parsed['accounts']}
-        when 1
-          {code: response.code, access_token: parsed['access_token'], accounts: parsed['accounts'], transactions: parsed['transactions']}
-        when 2
-          {code: response.code, transactions: parsed['transactions']}
-        else
-          {code: response.code, message: parsed}
-        end
-      else
-        {code: response.code, message: parsed}
-      end
+      {code: response.code, message: parsed}
     end
 
     private
@@ -55,14 +44,18 @@ module Plaid
       RestClient.get(url, params: {client_id: self.instance_variable_get(:'@client_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token})
     end
 
-    def post(path,access_token,options={})
+    def post(path, options={})
       url = BASE_URL + path
-      RestClient.post url, client_id: self.instance_variable_get(:'@client_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token, mfa: options[:mfa], type: options[:type]
+      RestClient.post url, options.merge!(auth)
     end
 
     def delete(path,access_token)
       url = BASE_URL + path
       RestClient.delete(url, params: {client_id: self.instance_variable_get(:'@client_id'), secret: self.instance_variable_get(:'@secret'), access_token: access_token})
+    end
+
+    def auth
+      {client_id: self.instance_variable_get(:'@client_id'), secret: self.instance_variable_get(:'@secret')}
     end
   end
 end
