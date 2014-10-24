@@ -13,7 +13,7 @@ module Plaid
     # This is a specific route for auth,
     # it returns specific acct info
     def add_account_auth(type, username, password, pin=nil, email=nil)
-      parse_auth_response(post('/auth', type, username, password, email, pin))
+      parse_auth_response(post('/connect', type, username, password, pin, email))
     end
 
     # This is a specific route for connect,
@@ -59,9 +59,13 @@ module Plaid
 
     private
 
-    def post(path,type,username,password,pin,email)
+    def post(path, type, username, password, pin=nil, email=nil)
       url = BASE_URL + path
-      RestClient.post url, client_id: self.instance_variable_get(:'@client_id') ,secret: self.instance_variable_get(:'@secret'), type: type ,credentials: {username: username, password: password} ,email: email
+      params =  {type: type, credentials: {username: username, password: password}}
+      params[:credentials][:pin] = pin if pin
+      params[:email] = email if email
+
+      RestClient.post url, params.merge!(auth)
     end
 
     def get(path,id="")
@@ -69,5 +73,8 @@ module Plaid
       RestClient.get(url)
     end
 
+    def auth
+      {client_id: self.instance_variable_get(:'@client_id'), secret: self.instance_variable_get(:'@secret')}
+    end
   end
 end

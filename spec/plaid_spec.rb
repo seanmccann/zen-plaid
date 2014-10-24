@@ -16,10 +16,10 @@ describe Plaid, 'Call' do
       end
     end
 
-    context 'pin and no mfa' do
-      it 'returns a response code of 200' do
+    context 'pin and required mfa' do
+      it 'returns a response code of 201' do
         response = Plaid.call.add_account_auth('usaa', 'plaid_test', 'plaid_good', '1234')
-        expect(response[:code]).to eq(200)
+        expect(response[:code]).to eq(201)
       end
     end
 
