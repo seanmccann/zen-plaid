@@ -18,8 +18,8 @@ module Plaid
 
     # This is a specific route for connect,
     # it returns transaction information
-    def add_account_connect(type,username,password,email)
-      parse_connect_response(post('/connect',type,username,password,email))
+    def add_account_connect(type, username, password,email)
+      parse_connect_response(post('/connect', type, username, password, email))
     end
 
     def get_place(id)
@@ -39,26 +39,12 @@ module Plaid
     # Specific parser for auth response
     def parse_auth_response(response)
       parsed = JSON.parse(response)
-      case response.code
-      when 200
-        {code: response.code, access_token: parsed['access_token'], accounts: parsed['accounts']}
-      when 201
-        {code: response.code, type: parsed['type'], access_token: parsed['access_token'], mfa_info: parsed['mfa_info']}
-      else
-        {code: response.code, message: parsed}
-      end
+      {code: response.code, message: parsed}
     end
 
     def parse_connect_response(response)
       parsed = JSON.parse(response)
-      case response.code
-      when 200
-        {code: response.code, access_token: parsed['access_token'], accounts: parsed['accounts'], transactions: parsed['transactions']}
-      when 201
-        {code: response.code, type: parsed['type'], access_token: parsed['access_token'], mfa_info: parsed['mfa_info']}
-      else
-        {code: response.code, message: parsed}
-      end
+      {code: response.code, message: parsed}
     end
 
     def parse_generic_response(response)

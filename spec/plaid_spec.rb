@@ -9,13 +9,26 @@ describe Plaid, 'Call' do
   end
 
   describe "Auth" do
-    it 'returns a response code of 200' do
-      response = Plaid.call.add_account_auth('wells','plaid_test','plaid_good','test@plaid.com')
-      expect(response[:code]).to eq(200)
+    context 'no mfa' do
+      it 'returns a response code of 200' do
+        response = Plaid.call.add_account_auth('wells','plaid_test','plaid_good','test@plaid.com')
+        expect(response[:code]).to eq(200)
+      end
     end
 
-    it 'returns a response code of 201' do
-      Plaid.call.add_account_auth('chase','plaid_test','plaid_good','test@plaid.com')
+    context 'mfa required' do
+      it 'returns a response code of 201' do
+        response = Plaid.call.add_account_auth('chase','plaid_test','plaid_good','test@plaid.com')
+        expect(response[:code]).to eq(201)
+      end
+    end
+
+    context 'wrong credentials' do
+      it 'returns a response code of 402' do
+        expect {
+          Plaid.call.add_account_auth('wells','plaid_test','plaid_bad','test@plaid.com')
+        }.to raise_error('402 Payment Required')
+      end
     end
   end
 
