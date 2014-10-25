@@ -16,7 +16,7 @@ module Plaid
 
      def initialize
         @environment ||= ENV['PLAID_ENV']
-        @client_id ||= ENV['PLAID_CLASS_ID']
+        @client_id ||= ENV['PLAID_CLIENT_ID']
         @secret ||= ENV['PLAID_SECRET']
      end
   end
