@@ -1,6 +1,8 @@
+require 'plaid/version'
+
 Gem::Specification.new do |s|
   s.name        = 'zen-plaid'
-  s.version     = '0.0.1'
+  s.version     = Plaid::VERSION
   s.date        = '2014-10-22'
   s.summary     = 'Plaid Ruby Gem'
   s.description = 'Ruby Gem wrapper for Plaid API.'
