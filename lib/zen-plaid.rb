@@ -1,16 +1,16 @@
 require 'rest_client'
 require 'oj'
 
-require 'plaid/version'
-require 'plaid/configuration'
-require 'plaid/util'
+require 'zen-plaid/version'
+require 'zen-plaid/configuration'
+require 'zen-plaid/util'
 
-require 'plaid/auth'
-require 'plaid/connect'
-require 'plaid/institution'
-require 'plaid/category'
-require 'plaid/entity'
-require 'plaid/balance'
+require 'zen-plaid/auth'
+require 'zen-plaid/connect'
+require 'zen-plaid/institution'
+require 'zen-plaid/category'
+require 'zen-plaid/entity'
+require 'zen-plaid/balance'
 
 module Plaid
   def self.uri_encode(params)
