@@ -1,4 +1,5 @@
 require 'rest_client'
+require 'oj'
 
 require 'plaid/version'
 require 'plaid/configuration'
@@ -18,15 +19,15 @@ module Plaid
   end
 
   def self.handle_api_error(rcode, rbody)
-    error_obj = Util.symbolize_names(JSON.parse(rbody))
+    error_obj = Util.symbolize_names(Oj.load(rbody))
 
     {code: rcode, error: error_obj}
   end
 
   def self.parse(response)
     begin
-      response = JSON.parse(response.body, symbolize_names: true)
-    rescue JSON::ParserError
+      response = Util.symbolize_names(Oj.load(response.body))
+    rescue Oj::ParseError
       raise general_api_error(response.code, response.body)
     end
   end
