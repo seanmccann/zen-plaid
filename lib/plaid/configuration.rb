@@ -15,9 +15,9 @@ module Plaid
      attr_accessor :environment, :client_id, :secret
 
      def initialize
-        @environment ||= ENV['PLAID_ENV'] || 'sandbox'
-        @client_id ||= ENV['PLAID_CLASS_ID'] || 'test_id'
-        @secret ||= ENV['PLAID_SECRET'] || 'test_secret'
+        @environment ||= ENV['PLAID_ENV']
+        @client_id ||= ENV['PLAID_CLASS_ID']
+        @secret ||= ENV['PLAID_SECRET']
      end
   end
 end
