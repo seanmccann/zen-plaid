@@ -46,6 +46,7 @@ module Plaid
   def self.request(method, url, params={}, headers={})
     request_opts = { verify_ssl: false }
     url = api_url(url)
+    params = params.merge!(auth)
 
     case method.to_s.downcase.to_sym
     when :get, :head, :delete
@@ -53,7 +54,7 @@ module Plaid
       url += "#{URI.parse(url).query ? '&' : '?'}#{uri_encode(params)}" if params && params.any?
       payload = nil
     else
-      payload = uri_encode(params.merge!(auth))
+      payload = uri_encode(params)
     end
 
     request_opts.update(headers: headers,

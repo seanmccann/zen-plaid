@@ -78,7 +78,6 @@ describe Plaid::Auth do
   # context 'correct credentials with pin' do
   #   it "returns 200 http code" do
   #     connection = Plaid::Auth.add({type: 'usaa', username: 'plaid_test', password: 'plaid_good', pin: 1234})
-  #     puts connection.inspect
   #     expect(connection[:code]).to eq(200)
   #   end
 
