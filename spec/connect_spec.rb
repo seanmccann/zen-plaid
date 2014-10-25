@@ -1,6 +1,23 @@
 require 'spec_helper.rb'
 
 describe Plaid::Connect do
+  describe "#get" do
+    it "returns 200 http code" do
+      connection = Plaid::Connect.get({access_token: 'test', type: 'chase'})
+      expect(connection[:code]).to eq(200)
+    end
+
+    it "returns transactions" do
+      connection = Plaid::Connect.get({access_token: 'test', type: 'chase'})
+      expect(connection[:message]).to have_key(:transactions)
+    end
+
+    it "returns accounts" do
+      connection = Plaid::Connect.get({access_token: 'test', type: 'chase'})
+      expect(connection[:message]).to have_key(:accounts)
+    end
+  end
+
   describe "#mfa_step" do
     context 'correct mfa reply code' do
       it "returns 200 http code" do
