@@ -1,4 +1,4 @@
-require 'plaid/version'
+require 'zen-plaid/version'
 
 Gem::Specification.new do |s|
   s.name        = 'zen-plaid'
