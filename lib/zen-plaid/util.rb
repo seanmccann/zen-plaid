@@ -63,5 +63,20 @@ module Plaid
       end
       result
     end
+
+    def self.credentials_params(params)
+      unless params.has_key?(:credentials)
+        params[:credentials] = {}
+        params[:credentials][:username] = params[:username] if params[:username]
+        params[:credentials][:password] = params[:password] if params[:password]
+        params[:credentials][:pin] = params[:pin] if params[:pin]
+      end
+
+      params.delete(:username)
+      params.delete(:password)
+      params.delete(:pin)
+
+      params
+    end
   end
 end
