@@ -5,7 +5,7 @@ module Plaid
     end
 
     def self.add(params)
-      Plaid.request(:post, '/connect', params)
+      Plaid.request(:post, '/connect', Plaid::Util.credentials_params(params))
     end
 
     def self.mfa_step(params)

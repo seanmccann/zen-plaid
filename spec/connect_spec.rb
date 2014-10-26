@@ -67,9 +67,9 @@ describe Plaid::Connect do
 
   describe "#add" do
     context 'missing password' do
-      it "returns 400 http code" do
+      it "returns 402 http code" do
         connection = Plaid::Connect.add({type: 'amex', username: 'plaid_test'})
-        expect(connection[:code]).to eq(400)
+        expect(connection[:code]).to eq(402)
       end
     end
 
@@ -156,19 +156,14 @@ describe Plaid::Connect do
     end
 
     context 'correct credentials with pin' do
-      it "returns 200 http code" do
-        connection = Plaid::Connect.add({type: 'amex', username: 'plaid_test', password: 'plaid_good', pin: 1234})
-        expect(connection[:code]).to eq(200)
+      it "returns 201 http code" do
+        connection = Plaid::Connect.add({type: 'usaa', username: 'plaid_test', password: 'plaid_good', pin: 1234})
+        expect(connection[:code]).to eq(201)
       end
 
-      it "returns accounts" do
-        connection = Plaid::Connect.add({type: 'amex', username: 'plaid_test', password: 'plaid_good', pin: 1234})
-        expect(connection[:message]).to have_key(:accounts)
-      end
-
-      it "returns transactions" do
-        connection = Plaid::Connect.add({type: 'amex', username: 'plaid_test', password: 'plaid_good', pin: 1234})
-        expect(connection[:message]).to have_key(:transactions)
+      it "returns mfa question" do
+        connection = Plaid::Auth.add({type: 'usaa', username: 'plaid_test', password: 'plaid_good', pin: 1234})
+        expect(connection[:message]).to have_key(:mfa)
       end
     end
 

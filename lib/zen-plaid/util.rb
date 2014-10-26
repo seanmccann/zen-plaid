@@ -66,6 +66,8 @@ module Plaid
 
     def self.credentials_params(params)
       unless params.has_key?(:credentials)
+        warn "You should use credentials to pass in username/password/pin"
+
         params[:credentials] = {}
         params[:credentials][:username] = params[:username] if params[:username]
         params[:credentials][:password] = params[:password] if params[:password]
