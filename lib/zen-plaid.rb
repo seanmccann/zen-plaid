@@ -1,16 +1,17 @@
-require 'rest_client'
+require 'logger'
 require 'oj'
+require 'rest_client'
 
-require 'zen-plaid/version'
 require 'zen-plaid/configuration'
 require 'zen-plaid/util'
+require 'zen-plaid/version'
 
 require 'zen-plaid/auth'
-require 'zen-plaid/connect'
-require 'zen-plaid/institution'
-require 'zen-plaid/category'
-require 'zen-plaid/entity'
 require 'zen-plaid/balance'
+require 'zen-plaid/category'
+require 'zen-plaid/connect'
+require 'zen-plaid/entity'
+require 'zen-plaid/institution'
 
 module Plaid
   def self.uri_encode(params)
@@ -67,6 +68,8 @@ module Plaid
 
     begin
       response = RestClient::Request.execute(request_opts)
+      log_message = Oj.dump(request_opts.merge!({response: response}))
+      Plaid.configuration.logger.info log_message
       return {code: response.code, message: parse(response)}
     rescue RestClient::ExceptionWithResponse => e
       return handle_api_error(e.http_code, e.http_body)

@@ -12,12 +12,13 @@ module Plaid
   end
 
   class Configuration
-     attr_accessor :environment, :client_id, :secret
+     attr_accessor :environment, :client_id, :secret, :logger
 
      def initialize
         @environment ||= 'development'
-        @client_id ||= 'test_id'
-        @secret ||= 'test_secret'
+        @client_id   ||= 'test_id'
+        @secret      ||= 'test_secret'
+        @logger      ||= Logger.new(STDOUT)
      end
   end
 end
