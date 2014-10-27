@@ -68,7 +68,7 @@ module Plaid
 
     begin
       response = RestClient::Request.execute(request_opts)
-      log_message = Oj.dump(request_opts.merge!({response: response}))
+      log_message = Oj.dump(request_opts.merge!({response: response, response_code: response.code}))
       Plaid.configuration.logger.info log_message
       return {code: response.code, message: parse(response)}
     rescue RestClient::ExceptionWithResponse => e
