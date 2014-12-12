@@ -30,6 +30,8 @@ module Plaid
       response = Util.symbolize_names(Oj.load(response.body))
     rescue Oj::ParseError
       raise general_api_error(response.code, response.body)
+    rescue ArgumentError
+      response = {error: true}
     end
   end
 
