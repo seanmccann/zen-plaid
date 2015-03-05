@@ -10,7 +10,6 @@ require 'zen-plaid/auth'
 require 'zen-plaid/balance'
 require 'zen-plaid/category'
 require 'zen-plaid/connect'
-require 'zen-plaid/entity'
 require 'zen-plaid/institution'
 
 module Plaid
@@ -21,8 +20,7 @@ module Plaid
 
   def self.handle_api_error(rcode, rbody)
     error_obj = Util.symbolize_names(Oj.load(rbody))
-
-    {code: rcode, error: error_obj}
+    {code: rcode, plaid_code: error_obj[:code], http_code: rcode, error: error_obj}
   end
 
   def self.parse(response)
