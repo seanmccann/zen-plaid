@@ -11,5 +11,13 @@ module Plaid
     def self.mfa_step(params)
       Plaid.request(:post, '/connect/step', params)
     end
+
+    def self.update_user(params)
+      Plaid.request(:patch, '/connect', params)
+    end
+
+    def self.update_mfa_step(params)
+      Plaid.request(:patch, '/connect/step', params)
+    end
   end
 end

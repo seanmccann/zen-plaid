@@ -9,7 +9,6 @@ require 'plaid/auth'
 require 'plaid/connect'
 require 'plaid/institution'
 require 'plaid/category'
-require 'plaid/entity'
 require 'plaid/balance'
 
 module Plaid

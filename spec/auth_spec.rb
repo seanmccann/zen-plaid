@@ -25,7 +25,7 @@ describe Plaid::Auth do
   context 'forget pin when its needed' do
     it "returns 402 http code" do
       connection = Plaid::Auth.add({type: 'usaa', username: 'plaid_test', password: 'plaid_good'})
-      expect(connection[:code]).to eq(402)
+      expect(connection[:code]).to eq(400)
     end
   end
 

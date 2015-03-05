@@ -83,7 +83,7 @@ describe Plaid::Connect do
     context 'forget pin when its needed' do
       it "returns 402 http code" do
         connection = Plaid::Connect.add({type: 'usaa', username: 'plaid_test', password: 'plaid_good'})
-        expect(connection[:code]).to eq(402)
+        expect(connection[:code]).to eq(400)
       end
     end
 
@@ -245,6 +245,100 @@ describe Plaid::Connect do
       it "returns mfa question selections" do
         connection = Plaid::Connect.add({type: 'citi', username: 'plaid_selections', password: 'plaid_good'})
         expect(connection[:message][:mfa][0]).to have_key(:answers)
+      end
+    end
+  end
+
+  describe "#update_user" do
+    context 'missing access_token' do
+      it "returns 400 http code" do
+        connection = Plaid::Connect.update_user({type: 'amex', username: 'plaid_test', password: 'plaid_good'})
+        expect(connection[:code]).to eq(400)
+      end
+    end
+
+    context 'missing password' do
+      it "returns 400 http code" do
+        connection = Plaid::Connect.update_user({access_token: 'test', type: 'amex', username: 'plaid_test'})
+        expect(connection[:code]).to eq(402)
+      end
+    end
+
+    context 'pin when its not needed' do
+      it "returns 200 http code" do
+        connection = Plaid::Connect.update_user({access_token: 'test', type: 'amex', username: 'plaid_test', password: 'plaid_good', pin: 1234})
+        expect(connection[:code]).to eq(200)
+      end
+    end
+
+    context 'forget pin when its needed' do
+      it "returns 402 http code" do
+        connection = Plaid::Connect.update_user({access_token: 'test', type: 'usaa', username: 'plaid_test', password: 'plaid_good'})
+        expect(connection[:code]).to eq(402)
+      end
+    end
+
+    context 'locked credentials with no mfa' do
+      it "returns 402 http code" do
+        connection = Plaid::Connect.update_user({access_token: 'test', type: 'amex', username: 'plaid_test', password: 'plaid_locked'})
+        expect(connection[:code]).to eq(402)
+      end
+
+      it "returns error message" do
+        connection = Plaid::Connect.update_user({access_token: 'test', type: 'amex', username: 'plaid_test', password: 'plaid_locked'})
+        expect(connection[:error][:message]).to eq('account locked')
+      end
+
+      it "returns error resolution" do
+        connection = Plaid::Connect.update_user({access_token: 'test', type: 'amex', username: 'plaid_test', password: 'plaid_locked'})
+        expect(connection[:error][:resolve]).to include('The account is locked.')
+      end
+    end
+  end
+
+  describe "#update_mfa_step" do
+    context 'correct mfa reply code' do
+      it "returns 200 http code" do
+        connection = Plaid::Connect.update_mfa_step({access_token: 'test', type: 'chase', mfa: '1234'})
+        expect(connection[:code]).to eq(200)
+      end
+    end
+
+    context 'wrong mfa reply code' do
+      it "returns 402 http code" do
+        connection = Plaid::Connect.update_mfa_step({access_token: 'test', type: 'chase', mfa: '666'})
+        expect(connection[:code]).to eq(402)
+      end
+
+      it "returns error message" do
+        connection = Plaid::Connect.update_mfa_step({access_token: 'test', type: 'chase', mfa: '666'})
+        expect(connection[:error][:message]).to eq("invalid mfa")
+      end
+    end
+
+    context 'correct mfa reply answer' do
+      it "returns 200 http code" do
+        connection = Plaid::Connect.update_mfa_step({access_token: 'test', type: 'us', mfa: 'tomato'})
+        expect(connection[:code]).to eq(200)
+      end
+    end
+
+    context 'wrong mfa reply answer' do
+      it "returns 402 http code" do
+        connection = Plaid::Connect.update_mfa_step({access_token: 'test', type: 'us', mfa: 'wrong'})
+        expect(connection[:code]).to eq(402)
+      end
+
+      it "returns error message" do
+        connection = Plaid::Connect.update_mfa_step({access_token: 'test', type: 'us', mfa: 'wrong'})
+        expect(connection[:error][:message]).to eq("invalid mfa")
+      end
+    end
+
+    context 'correct mfa reply selections' do
+      it "returns 200 http code" do
+        connection = Plaid::Connect.update_mfa_step({access_token: 'test', type: 'citi', credentials: {pin: 1234}})
+        expect(connection[:code]).to eq(200)
       end
     end
   end
